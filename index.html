@@ -17,6 +17,9 @@
    El spine editorial (regla de medición) arranca DESPUÉS del hero
    porque el hero ahora es full-bleed a 2 columnas sin el padding-left
    de 84px que la regla usa de referencia — ver nota en el HTML.
+   Injerto 3 (tarea ilustraciones-v61): 3 ilustraciones SVG inline
+   propias en los espacios blancos a la derecha de los sec-header —
+   ver bloque ILUSTRACIONES más abajo.
    ============================================================ */
 :root{
   --papel:#FAFAF7;
@@ -73,7 +76,7 @@ a{color:inherit;}
 .despues-del-hero{ position:relative; }
 
 section{
-  padding:96px 24px 96px 84px;
+  padding:64px 24px 64px 84px; /* 96→64: pedido Jero 9/7 "achicá los espacios" */
   max-width:1180px;
   margin:0 auto;
   position:relative;
@@ -81,23 +84,21 @@ section{
 }
 section:last-of-type{ border-bottom:none; }
 
+/* Carril: SOLO el número (el nombre lo dice el eyebrow de la sección — antes
+   estaban los dos y se leía repetido; fix pedido por Jero 9/7). */
 .tick{
-  position:absolute; left:28px; top:96px;
-  display:flex; align-items:flex-start; gap:12px;
+  position:absolute; left:28px; top:66px;
+  display:flex; align-items:center; gap:12px;
   color:var(--acento);
 }
-.tick .linea-h{ width:20px; height:2px; background:var(--acento); margin-top:9px; flex:none; }
+.tick .linea-h{ width:20px; height:2px; background:var(--acento); flex:none; }
 .tick .num{
-  font-family:var(--mono); font-size:.92rem; font-weight:700;
-  letter-spacing:.02em; line-height:1.3; display:block;
-}
-.tick .lbl{
-  font-family:var(--mono); font-size:.6rem; font-weight:600;
-  letter-spacing:.12em; text-transform:uppercase; color:var(--tinta-tenue);
-  display:block; margin-top:2px;
+  font-family:var(--sans); font-size:1.05rem; font-weight:900;
+  letter-spacing:-.01em; line-height:1; display:block;
+  font-variant-numeric:tabular-nums;
 }
 @media (max-width:900px){
-  section{ padding:72px 24px; }
+  section{ padding:56px 24px; }
   .tick{ display:none; }
 }
 
@@ -140,10 +141,10 @@ nav a:focus-visible{ outline:2px solid var(--acento); outline-offset:3px; }
 
 /* ===== EYEBROW / TAGS ===== */
 .eyebrow{
-  font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+  font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
   color:var(--acento); font-weight:600;
   display:inline-block;
-  margin-bottom:26px;
+  margin-bottom:18px;
 }
 .tag{
   font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
@@ -346,6 +347,25 @@ h1 .acc{ font-weight:900; color:var(--acento); display:block; }
 }
 .sec-header h2 .acc{ font-weight:900; color:var(--acento); }
 .sec-header p{ font-size:.95rem; color:var(--tinta-tenue); max-width:56ch; line-height:1.7; }
+
+/* ===== ILUSTRACIONES SVG (injerto 3, tarea ilustraciones-v61) =====
+   Línea técnica fina, acento único, puramente decorativo-informativas
+   (cada una cuenta lo que su sección dice) → aria-hidden. Viven en el
+   espacio blanco a la derecha del sec-header (que en desktop sobra:
+   el sec-header mide max-width 640px pero la sección llega a ~1072px
+   útiles). Se ocultan donde ese espacio libre desaparece — no empujan
+   ni pisan el contenido, están fuera de flujo. */
+.sec-ilustracion{
+  display:none;
+  position:absolute;
+  top:60px; right:0;
+  pointer-events:none;
+}
+.sec-ilustracion svg{ display:block; width:100%; height:auto; overflow:visible; }
+.sec-ilustracion.ilustr-flujo{ width:230px; top:76px; }
+.sec-ilustracion.ilustr-catalogo{ width:176px; top:58px; }
+.sec-ilustracion.ilustr-reloj{ width:118px; top:56px; }
+@media (min-width:1100px){ .sec-ilustracion{ display:block; } }
 
 /* ===== PASOS ===== */
 .pasos{
@@ -661,11 +681,32 @@ footer{
 
     <!-- ===================== CÓMO EMPIEZA ===================== -->
     <section id="pasos" class="reveal">
-      <span class="tick"><span class="linea-h"></span><span><span class="num">01</span><span class="lbl">Cómo empieza</span></span></span>
+      <span class="tick"><span class="linea-h"></span><span class="num">01</span></span>
       <div class="sec-header">
         <span class="eyebrow">Cómo empieza</span>
         <h2>Cuatro pasos, <span class="acc">nada más</span></h2>
         <p>Sin vueltas: de tu catálogo a tu asistente trabajando.</p>
+      </div>
+      <!-- Ilustración: el flujo completo en 4 nodos — catálogo → asistente
+           conversando → agenda → listo (tranquilidad). Cuenta lo mismo que
+           los 4 "paso" de abajo, pero como diagrama de una sola mirada. -->
+      <div class="sec-ilustracion ilustr-flujo" aria-hidden="true">
+        <svg viewBox="0 0 260 90" aria-hidden="true">
+          <circle cx="24" cy="45" r="17" fill="var(--papel-2)" stroke="var(--linea-fuerte)" stroke-width="1.4"/>
+          <circle cx="96" cy="45" r="17" fill="var(--papel-2)" stroke="var(--linea-fuerte)" stroke-width="1.4"/>
+          <circle cx="168" cy="45" r="17" fill="var(--papel-2)" stroke="var(--linea-fuerte)" stroke-width="1.4"/>
+          <circle cx="240" cy="45" r="17" fill="var(--papel-2)" stroke="var(--linea-fuerte)" stroke-width="1.4"/>
+          <path d="M41 45H79" stroke="var(--linea-fuerte)" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+          <path d="M113 45H151" stroke="var(--linea-fuerte)" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+          <path d="M185 45H223" stroke="var(--linea-fuerte)" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+          <path d="M17 39H31M17 45H27M17 51H31" fill="none" stroke="var(--acento)" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="90" cy="45" r="1.7" fill="var(--acento)"/>
+          <circle cx="96" cy="45" r="1.7" fill="var(--acento)"/>
+          <circle cx="102" cy="45" r="1.7" fill="var(--acento)"/>
+          <rect x="161" y="38" width="14" height="13" rx="1.5" stroke="var(--acento)" stroke-width="1.6" fill="none"/>
+          <path d="M165 35v5M171 35v5M161 42H175" fill="none" stroke="var(--acento)" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M233 45l5 5 9-10" fill="none" stroke="var(--acento)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
       <div class="pasos">
         <div class="paso">
@@ -697,11 +738,30 @@ footer{
 
     <!-- ===================== QUÉ HACE ===================== -->
     <section id="quehace" class="reveal">
-      <span class="tick"><span class="linea-h"></span><span><span class="num">02</span><span class="lbl">Qué hace</span></span></span>
+      <span class="tick"><span class="linea-h"></span><span class="num">02</span></span>
       <div class="sec-header">
         <span class="eyebrow">Qué hace</span>
         <h2>Un asistente <span class="acc">completo</span></h2>
         <p>Todo esto es lo que instala NORITO — pensado para negocios reales, con frenos honestos.</p>
+      </div>
+      <!-- Ilustración: el catálogo (documento con precios) entra por la
+           flecha punteada y sale una respuesta verificada (check) — la
+           idea central de la sección: "responde SOLO desde tu catálogo". -->
+      <div class="sec-ilustracion ilustr-catalogo" aria-hidden="true">
+        <svg viewBox="0 0 200 150" aria-hidden="true">
+          <rect x="14" y="18" width="62" height="86" rx="3" stroke="var(--linea-fuerte)" stroke-width="1.4" fill="var(--papel-2)"/>
+          <circle cx="27" cy="38" r="2" fill="var(--acento)"/>
+          <path d="M35 38H64" stroke="var(--tinta-tenue)" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="27" cy="58" r="2" fill="var(--acento)"/>
+          <path d="M35 58H58" stroke="var(--tinta-tenue)" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="27" cy="78" r="2" fill="var(--acento)"/>
+          <path d="M35 78H62" stroke="var(--tinta-tenue)" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="27" cy="98" r="2" fill="var(--acento)"/>
+          <path d="M35 98H52" stroke="var(--tinta-tenue)" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M82 62H108" stroke="var(--linea-fuerte)" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round"/>
+          <path d="M122 30H178a10 10 0 0 1 10 10V72a10 10 0 0 1-10 10H132L120 96L122 82a10 10 0 0 1-10-10V40a10 10 0 0 1 10-10Z" fill="var(--papel)" stroke="var(--acento)" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M132 56l8 8 16-16" fill="none" stroke="var(--acento)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
       <div class="cuadros">
         <details class="ac-item">
@@ -757,7 +817,7 @@ footer{
 
     <!-- ===================== PLANES ===================== -->
     <section id="planes" class="reveal">
-      <span class="tick"><span class="linea-h"></span><span><span class="num">03</span><span class="lbl">Planes</span></span></span>
+      <span class="tick"><span class="linea-h"></span><span class="num">03</span></span>
       <div class="sec-header">
         <span class="eyebrow">Planes</span>
         <h2>Standard y <span class="acc">Pro</span></h2>
@@ -816,11 +876,24 @@ footer{
 
     <!-- ===================== PROBALO (cierre) ===================== -->
     <section id="probalo" class="reveal">
-      <span class="tick"><span class="linea-h"></span><span><span class="num">04</span><span class="lbl">Probalo</span></span></span>
+      <span class="tick"><span class="linea-h"></span><span class="num">04</span></span>
       <div class="sec-header">
         <span class="eyebrow">Probá ser tu cliente</span>
         <h2>Preguntanos <span class="acc">lo que quieras</span></h2>
         <p>Este asistente es el nuestro: te explica qué es NORITO, cómo trabaja y cómo se empieza. El tuyo va a responder igual — pero sobre TU negocio.</p>
+      </div>
+      <!-- Ilustración: reloj con sol y luna — remate del "nunca duerme" del
+           hero, aplicado acá donde el asistente responde en cualquier
+           momento a lo que le preguntes. -->
+      <div class="sec-ilustracion ilustr-reloj" aria-hidden="true">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="34" fill="var(--papel-2)" stroke="var(--linea-fuerte)" stroke-width="1.4"/>
+          <path d="M30 34l6 6M20 60h8M30 86l6-6" stroke="var(--acento)" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="76" cy="52" r="13" fill="var(--acento)"/>
+          <circle cx="82" cy="47" r="11" fill="var(--papel-2)"/>
+          <path d="M60 60V46M60 60H74" stroke="var(--tinta)" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="60" cy="60" r="2.4" fill="var(--tinta)"/>
+        </svg>
       </div>
       <div class="chat-shell">
         <div class="chat-header">
@@ -848,7 +921,7 @@ footer{
 
     <!-- ===================== PREGUNTAS FRECUENTES ===================== -->
     <section id="faq" class="reveal">
-      <span class="tick"><span class="linea-h"></span><span><span class="num">05</span><span class="lbl">FAQ</span></span></span>
+      <span class="tick"><span class="linea-h"></span><span class="num">05</span></span>
       <div class="sec-header">
         <span class="eyebrow">Preguntas frecuentes</span>
         <h2>Lo que todos <span class="acc">preguntan</span></h2>
@@ -915,7 +988,7 @@ footer{
   if('IntersectionObserver' in window){
     var navObs = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ if(e.isIntersecting){ marcarActiva(e.target.id); } });
-    }, {threshold:0.3, rootMargin:'-35% 0px -45% 0px'});
+    }, {threshold:0, rootMargin:'-35% 0px -45% 0px'}); /* threshold 0: con 0.3 las secciones altas jamás llegaban al 30% dentro de la franja → el nav nunca se activaba (bug cazado por Jero 9/7) */
     secciones.forEach(function(s){ navObs.observe(s); });
   }
 
