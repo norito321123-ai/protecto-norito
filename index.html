@@ -262,6 +262,21 @@ h1 .acc{ font-weight:900; color:var(--acento); display:block; }
 .reveal{ opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
 .reveal.in{ opacity:1; transform:translateY(0); }
 
+/* ===== CASCADA DE APARICIÓN (v6.2, esencia biblioteca 11/7 — prompt 1 de Jero):
+   los hijos de las grillas (pasos, cuadros, planes) entran DE A UNO, 0.1s entre
+   sí, cuando su sección se revela. El índice viene por --casc (lo pone el JS). */
+.reveal .casc{
+  opacity:0; transform:translateY(26px);
+  transition:opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1);
+  /* 0.66s entre hijos (pedido Jero 12/7 ronda 2: "3 veces más lenta" — cada
+     elemento entra bien separado del anterior, cascada inconfundible) */
+  transition-delay:calc(var(--casc, 0) * .66s);
+}
+.reveal.in .casc{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .reveal .casc{ opacity:1; transform:none; transition:none; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .br-in{ animation:none; opacity:1; transform:none; }
   .hero-item{ animation:none; opacity:1; transform:none; }
@@ -295,29 +310,34 @@ h1 .acc{ font-weight:900; color:var(--acento); display:block; }
 .telefono .notch i{
   width:64px; height:4px; border-radius:99px; background:var(--linea-fuerte); display:block;
 }
+/* ===== VESTIDO WHATSAPP (pedido Jero 12/7: "que se identifique que
+   trabajamos con WhatsApp") — header verde oficial, fondo de chat beige,
+   burbujas salientes verde clarito. Solo DENTRO del teléfono; la página
+   sigue blanco/azul. */
 .tel-header{
   display:flex; align-items:center; gap:10px;
-  padding:10px 13px; border-bottom:1px solid var(--linea);
+  padding:10px 13px;
+  background:#008069; /* verde WhatsApp */
 }
 .tel-header .avatar{
   width:26px; height:26px; border-radius:50%;
-  background:var(--acento); flex:none;
+  background:#fff; flex:none;
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--sans); font-size:.62rem; color:var(--papel); font-weight:800;
+  font-family:var(--sans); font-size:.62rem; color:var(--acento); font-weight:800;
 }
-.tel-header b{ font-size:.7rem; display:block; line-height:1.2; }
-.tel-header small{ font-size:.58rem; color:var(--whats); display:flex; align-items:center; gap:4px; }
+.tel-header b{ font-size:.7rem; display:block; line-height:1.2; color:#fff; }
+.tel-header small{ font-size:.58rem; color:rgba(255,255,255,.88); display:flex; align-items:center; gap:4px; }
 .tel-header small::before{
-  content:""; width:5px; height:5px; border-radius:50%; background:var(--whats); display:inline-block;
+  content:""; width:5px; height:5px; border-radius:50%; background:#25d366; display:inline-block;
 }
-.tel-chat{ padding:13px 12px 15px; display:flex; flex-direction:column; gap:7px; min-height:210px; background:var(--papel-2); }
+.tel-chat{ padding:13px 12px 15px; display:flex; flex-direction:column; gap:7px; min-height:210px; background:#efeae2; }
 .burbuja{
   max-width:82%;
   padding:8px 11px; border-radius:10px;
   font-size:.68rem; line-height:1.5;
 }
-.burbuja.cliente{ align-self:flex-end; background:var(--tinta); color:var(--papel); border-bottom-right-radius:3px; }
-.burbuja.asistente{ align-self:flex-start; background:var(--papel); border:1px solid var(--linea-fuerte); border-bottom-left-radius:3px; }
+.burbuja.cliente{ align-self:flex-end; background:#d9fdd3; color:#0b141a; border-bottom-right-radius:3px; }
+.burbuja.asistente{ align-self:flex-start; background:#fff; border:1px solid rgba(11,20,26,.08); border-bottom-left-radius:3px; color:#0b141a; }
 .burbuja .check{ color:var(--acento); font-weight:700; }
 .tel-anim .burbuja{ opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease; }
 .tel-anim.contando .burbuja{ opacity:1; transform:none; }
@@ -328,6 +348,47 @@ h1 .acc{ font-weight:900; color:var(--acento); display:block; }
 .tel-anim.contando .burbuja:nth-child(5){ transition-delay:2.75s; }
 @media (prefers-reduced-motion: reduce){
   .tel-anim .burbuja{ opacity:1; transform:none; transition:none; }
+}
+
+/* ===== CHAT VIVO (v6.2, idea de Jero 11/7): la conversación se escribe sola
+   y rota por rubros. Burbujas creadas por JS + indicador "escribiendo…".
+   Con reduced-motion o sin JS el motor NO arranca: queda la conversación
+   estática de la peluquería (el HTML de siempre). ===== */
+.tel-chat.vivo .burbuja{ opacity:1; transform:none; transition:none; }
+.tel-chat.vivo .burbuja.entra{ animation:burbuja-entra .34s ease both; }
+@keyframes burbuja-entra{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:none; }
+}
+.burbuja.tipeando{ display:inline-flex; align-items:center; gap:4px; min-width:46px; }
+.burbuja.tipeando i{
+  width:6px; height:6px; border-radius:50%; background:var(--tinta-tenue);
+  display:block; animation:tipeo 1s ease-in-out infinite;
+}
+.burbuja.tipeando i:nth-child(2){ animation-delay:.18s; }
+.burbuja.tipeando i:nth-child(3){ animation-delay:.36s; }
+@keyframes tipeo{
+  0%,60%,100%{ opacity:.35; transform:none; }
+  30%{ opacity:1; transform:translateY(-3px); }
+}
+/* rotación de CELULAR ENTERO (pedido Jero 12/7: "que rote hacia el costado y
+   aparezca con otro celu — no aparezcas/desaparezcas"): el marco se desliza
+   afuera con una leve inclinación y ENTRA OTRO desde el lado opuesto. El
+   .hero-panel (overflow:hidden + clip-path) hace de escenario que recorta. */
+.marco-anim{ will-change:transform; }
+.marco-sale{ animation:marcoSale .6s cubic-bezier(.5,.05,.8,.4) both; }
+.marco-entra{ animation:marcoEntra .65s cubic-bezier(.2,.6,.25,1) both; }
+@keyframes marcoSale{
+  from{ transform:none; opacity:1; }
+  to{ transform:translateX(-135%) rotate(-14deg); opacity:0; }
+}
+@keyframes marcoEntra{
+  from{ transform:translateX(135%) rotate(14deg); opacity:0; }
+  to{ transform:none; opacity:1; }
+}
+@media (prefers-reduced-motion: reduce){
+  .burbuja.tipeando i{ animation:none; }
+  .marco-sale, .marco-entra{ animation:none; }
 }
 .tel-pie{
   border-top:1px solid var(--linea);
@@ -586,6 +647,14 @@ footer{
 @media (max-width:900px){ footer{ padding:40px 24px; } }
 
 /* ===== RESPONSIVE ===== */
+/* anchos medios (901-1120px): el panel queda angosto (~360px) y el celular
+   de 300+28px se cortaba contra la diagonal (bug cazado por Jero 12/7) —
+   acá se achica para entrar entero con aire */
+@media (max-width:1120px) and (min-width:901px){
+  .telefono{ width:min(256px, 78vw); }
+  .telefono-marco{ padding:10px; }
+  .hero-panel{ padding:48px 20px; }
+}
 @media (max-width:900px){
   .hero{ grid-template-columns:1fr; min-height:auto; }
   .hero-panel{
@@ -649,7 +718,7 @@ footer{
       <div class="hero-panel" id="heroPanel">
         <!-- EL TELÉFONO: el asistente trabajando (ejemplo ilustrativo) -->
         <div class="telefono-marco">
-          <div class="telefono" role="img" aria-label="Ejemplo ilustrativo: el asistente agenda un turno por WhatsApp">
+          <div class="telefono" role="img" aria-label="Ejemplo ilustrativo: el asistente agenda turnos por WhatsApp en distintos negocios — peluquería, consultorio, odontología, gimnasio, restaurante">
             <div class="notch"><i></i></div>
             <div class="tel-header">
               <span class="avatar">N·</span>
@@ -1019,6 +1088,14 @@ footer{
     });
   }
 
+  /* cascada: etiquetar los hijos de las grillas con su índice (--casc) */
+  document.querySelectorAll('.pasos, .cuadros, .planes').forEach(function(grid){
+    Array.prototype.forEach.call(grid.children, function(hijo, i){
+      hijo.classList.add('casc');
+      hijo.style.setProperty('--casc', i);
+    });
+  });
+
   var revealEls = document.querySelectorAll('.reveal');
   if(reduce || !('IntersectionObserver' in window)){
     revealEls.forEach(function(el){ el.classList.add('in'); });
@@ -1036,11 +1113,130 @@ footer{
     revealEls.forEach(function(el){ io.observe(el); });
   }
 
-  /* el teléfono del hero arranca su conversación apenas carga (siempre visible, no hace falta scroll) */
+  /* ===== CHAT VIVO del hero (v6.2, idea de Jero 11/7): la conversación se
+     escribe sola (puntitos de "escribiendo…") y va rotando por rubros en loop.
+     Textos NUESTROS, sin red, sin fotos. Con reduced-motion: conversación
+     estática de la peluquería (mismo contenido que el HTML). ===== */
   var telChat = document.getElementById('telChat');
+  var telNombre = document.querySelector('.tel-header b');
+  var telefono = document.querySelector('.telefono');
+  var CONVOS = [
+    {negocio:'Peluquería de Eva — asistente', m:[
+      ['c','Hola! ¿tenés turno para corte mañana?'],
+      ['a','¡Hola! Sí 👋 ¿me decís tu nombre? Mañana tengo 10:30 o 16:00 con Eva.'],
+      ['c','Juan. El de las 16 va perfecto'],
+      ['a','Listo, Juan <span class="check">✓</span> Corte · Eva · jueves 16:00. ¿Necesitás algo más?'],
+      ['a','Le avisé a Eva y quedó en la agenda. Te recuerdo 30 minutos antes ⏰']
+    ]},
+    {negocio:'Consultorio Dra. Paz — asistente', m:[
+      ['c','Hola, ¿la doctora atiende los sábados?'],
+      ['a','¡Hola! Sí 👋 este sábado tengo 9:00 u 11:30. ¿Tu nombre?'],
+      ['c','Marta. Mejor a las 9'],
+      ['a','Listo, Marta <span class="check">✓</span> Consulta · Dra. Paz · sábado 9:00. Traé tu credencial.'],
+      ['a','Quedó en la agenda. Te recuerdo el viernes 🔔']
+    ]},
+    {negocio:'Odontología Rivas — asistente', m:[
+      ['c','Hola! ¿hacen limpieza dental?'],
+      ['a','¡Hola! Sí 👋 la hace el Dr. Rivas. Tengo martes 15:00 o jueves 10:00.'],
+      ['c','Jueves 10 entonces. Soy Lucas'],
+      ['a','Listo, Lucas <span class="check">✓</span> Limpieza · Dr. Rivas · jueves 10:00.'],
+      ['a','Si necesitás cambiarlo, escribime por acá y lo muevo 😉']
+    ]},
+    {negocio:'Gimnasio Norte — asistente', m:[
+      ['c','Hola! quiero probar una clase de funcional'],
+      ['a','¡Hola! 💪 Mañana hay 18:00 o 19:30. ¿Cómo te llamás?'],
+      ['c','Sofi. La de las 18'],
+      ['a','Listo, Sofi <span class="check">✓</span> Funcional · mañana 18:00. Vení 10 minutos antes.'],
+      ['a','Le avisé al profe. ¡Te esperamos! 🏋️']
+    ]},
+    {negocio:'Lo de Ana — asistente', m:[
+      ['c','Hola! ¿tienen mesa para 4 esta noche?'],
+      ['a','¡Hola! Sí 👋 ¿21:00 o 22:15? ¿A nombre de quién?'],
+      ['c','21:00, a nombre de Bruno'],
+      ['a','Listo, Bruno <span class="check">✓</span> Mesa para 4 · hoy 21:00.'],
+      ['a','Anotado en el salón. ¡Los esperamos! 🍽️']
+    ]}
+  ];
   if(telChat){
-    if(reduce){ telChat.classList.add('contando'); }
-    else{ setTimeout(function(){ telChat.classList.add('contando'); }, 1100); }
+    if(!telNombre || !telefono){
+      telChat.classList.add('contando'); /* fallback: estática, todo visible */
+    } else if(reduce){
+      /* reduced-motion: sin tipeo ni fundidos, pero el contenido SÍ rota —
+         conversación completa de entrada, cambio instantáneo cada 8s */
+      telChat.classList.remove('tel-anim');
+      telChat.classList.add('vivo');
+      var iR = 0;
+      var pintarConvo = function(){
+        var convo = CONVOS[iR % CONVOS.length];
+        telNombre.textContent = convo.negocio;
+        telChat.innerHTML = '';
+        convo.m.forEach(function(par){
+          var b = document.createElement('div');
+          b.className = 'burbuja ' + (par[0] === 'c' ? 'cliente' : 'asistente');
+          b.innerHTML = par[1];
+          telChat.appendChild(b);
+        });
+        iR++;
+      };
+      pintarConvo();
+      setInterval(pintarConvo, 8000);
+    } else {
+      var pasarConvo = function(n){
+        var convo = CONVOS[n % CONVOS.length];
+        telNombre.textContent = convo.negocio;
+        telChat.innerHTML = '';
+        var j = 0;
+        var siguiente = function(){
+          if(j >= convo.m.length){
+            /* conversación completa: se lee 4.2s → el celular SE VA por la
+               izquierda y ENTRA OTRO por la derecha con el próximo negocio */
+            setTimeout(function(){
+              marco.classList.add('marco-sale');
+              setTimeout(function(){
+                /* mientras está afuera: se viste el próximo negocio */
+                var prox = CONVOS[(n + 1) % CONVOS.length];
+                telNombre.textContent = prox.negocio;
+                telChat.innerHTML = '';
+                marco.classList.remove('marco-sale');
+                marco.classList.add('marco-entra');
+                setTimeout(function(){
+                  marco.classList.remove('marco-entra');
+                  pasarConvo(n + 1);
+                }, 680);
+              }, 620);
+            }, 4200);
+            return;
+          }
+          var rol = convo.m[j][0], texto = convo.m[j][1];
+          if(rol === 'a'){
+            /* el asistente "tipea" antes de mandar */
+            var b = document.createElement('div');
+            b.className = 'burbuja asistente tipeando entra';
+            b.innerHTML = '<i></i><i></i><i></i>';
+            telChat.appendChild(b);
+            setTimeout(function(){
+              b.classList.remove('tipeando');
+              b.innerHTML = texto;
+              j++; setTimeout(siguiente, 500);
+            }, 900);
+          } else {
+            var c = document.createElement('div');
+            c.className = 'burbuja cliente entra';
+            c.textContent = texto;
+            telChat.appendChild(c);
+            j++; setTimeout(siguiente, 700);
+          }
+        };
+        setTimeout(siguiente, 350);
+      };
+      var marco = document.querySelector('.telefono-marco');
+      setTimeout(function(){
+        telChat.classList.remove('tel-anim');
+        telChat.classList.add('vivo');
+        if(marco){ marco.classList.add('marco-anim'); }
+        pasarConvo(0);
+      }, 1100);
+    }
   }
 
   /* ===== CHAT SIMULADO (sin red) — nuestro asistente explicando qué es NORITO ===== */
