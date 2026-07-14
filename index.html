@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NORITO — Tu negocio nunca duerme</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20x='6'%20y='12'%20width='88'%20height='66'%20rx='20'%20fill='%230B3FFF'/%3E%3Cpolygon%20points='30,72%2026,92%2050,74'%20fill='%230B3FFF'/%3E%3Cg%20stroke='%23fff'%20stroke-width='9'%20stroke-linecap='round'%20fill='none'%3E%3Cpath%20d='M36%2062%20V32'/%3E%3Cpath%20d='M64%2062%20V32'/%3E%3Cpath%20d='M36%2032%20L64%2062'/%3E%3C/g%3E%3Ccircle%20cx='76'%20cy='62'%20r='5'%20fill='%23fff'/%3E%3C/svg%3E">
 <style>
 /* ============================================================
    TALLER BLANCOAZUL — CABEZA B + INJERTOS (tarea injertos-version-b)
@@ -31,6 +32,8 @@
   --acento-tenue:rgba(11,63,255,.08);
   --linea:#DDE3F0;
   --linea-fuerte:#B9C3DC;
+  --papel-calido:#F2EADA;   /* detalle cálido v4: franja del costado izquierdo */
+  --madera:#CBA876;         /* acento cálido para bloques puntuales */
   --whats:#1a9e52;
   --sans:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace;
@@ -39,6 +42,11 @@
 html{scroll-behavior:smooth;}
 body{
   background:var(--papel);
+  /* franja cálida del costado izquierdo (hasta el spine, contenedor centrado 1180) */
+  background:linear-gradient(90deg,
+    var(--papel-calido) 0,
+    var(--papel-calido) max(0px, 50vw - 562px),
+    var(--papel) max(0px, 50vw - 562px));
   color:var(--tinta);
   font-family:var(--sans);
   line-height:1.6;
@@ -46,6 +54,7 @@ body{
   position:relative;
 }
 a{color:inherit;}
+@media (max-width:900px){ body{ background:var(--papel); } }  /* franja cálida solo en desktop */
 ::selection{ background:rgba(11,63,255,.16); color:var(--tinta); }
 
 /* ===== LA REGLA DE MEDICIÓN — elemento firma de B =====
@@ -120,9 +129,11 @@ header.materializada{
   -webkit-backdrop-filter:blur(10px);
 }
 .brand{
+  display:inline-flex; align-items:center; gap:9px;
   font-family:var(--sans); font-weight:800; font-size:1.05rem;
   letter-spacing:-.01em; white-space:nowrap;
 }
+.brand-mark{ width:26px; height:26px; flex:none; }
 .brand .dot{ color:var(--acento); font-weight:900; }
 nav{ display:flex; gap:26px; flex-wrap:wrap; justify-content:flex-end; }
 nav a{
@@ -692,7 +703,7 @@ footer{
   <div class="contenido">
 
     <header id="topbar">
-      <span class="brand">NORITO<span class="dot">·</span></span>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><rect x="6" y="12" width="88" height="66" rx="20" fill="#0B3FFF"/><polygon points="30,72 26,92 50,74" fill="#0B3FFF"/><g stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none"><path d="M36 62 V32"/><path d="M64 62 V32"/><path d="M36 32 L64 62"/></g><circle cx="76" cy="62" r="5" fill="#fff"/></svg>NORITO<span class="dot">·</span></span>
       <nav id="navPrincipal">
         <a href="#somos" data-sec="somos">Qué somos</a>
         <a href="#pasos" data-sec="pasos">Cómo empieza</a>
