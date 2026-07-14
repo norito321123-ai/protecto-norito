@@ -69,16 +69,19 @@ a{color:inherit;}
   height:100%;
   z-index:0; pointer-events:none;
 }
-.regla-svg{ position:absolute; top:0; left:28px; height:100%; width:2px; overflow:visible; }
+/* La regla como DIV sólido de altura 100% (antes era un <line> SVG dibujado por
+   stroke-dasharray, frágil en páginas largas: se cortaba). Ahora se revela con
+   scaleY(0→1): siempre sólida y de alto COMPLETO, mida lo que mida la página. */
 .regla-linea{
-  stroke:var(--acento); stroke-width:2;
-  stroke-dasharray:3000; stroke-dashoffset:3000;
-  animation:dibujarRegla 2.4s cubic-bezier(.2,.7,.2,1) .3s forwards;
+  position:absolute; top:0; left:28px; width:2px; height:100%;
+  background:var(--acento);
+  transform-origin:top;   /* base = VISIBLE (scaleY 1); la animación solo la "dibuja" */
+  animation:dibujarRegla 2.4s cubic-bezier(.2,.7,.2,1) .3s backwards;
 }
-@keyframes dibujarRegla{ to{ stroke-dashoffset:0; } }
+@keyframes dibujarRegla{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
 @media (max-width:900px){ .regla-wrap{ display:none; } }
 @media (prefers-reduced-motion: reduce){
-  .regla-linea{ animation:none; stroke-dashoffset:0; }
+  .regla-linea{ animation:none; }
 }
 
 .contenido{ position:relative; z-index:1; }
@@ -117,7 +120,7 @@ header{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
   padding:22px 32px 22px 84px;
   border-bottom:1px solid transparent;
-  background:rgba(250,250,247,0);
+  background:var(--papel);  /* sólido: el logo queda sobre blanco, la franja cálida arranca debajo */
   backdrop-filter:blur(0px);
   -webkit-backdrop-filter:blur(0px);
   transition:background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
@@ -754,9 +757,7 @@ footer{
     <!-- REGLA DE MEDICIÓN — elemento firma de B, arranca después del hero -->
     <div class="despues-del-hero">
     <div class="regla-wrap" aria-hidden="true">
-      <svg class="regla-svg" preserveAspectRatio="none">
-        <line class="regla-linea" x1="1" y1="0" x2="1" y2="100%"/>
-      </svg>
+      <div class="regla-linea"></div>
     </div>
 
     <!-- ===================== CÓMO EMPIEZA ===================== -->
